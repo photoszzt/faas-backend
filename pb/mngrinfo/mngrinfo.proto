@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.mngrinfo";
+option java_outer_classname = "AvAManagerInfoProto";
+option go_package = "./;mngrinfo";
+
+package mngrinfo;
+
+service AvAManagerInfo {
+    rpc GetAvAManagerInfo(AvAManagerInfoRequest) returns (AvAManagerInfoReply) {}
+}
+
+message AvAManagerInfoRequest {
+    string vmid = 1;
+}
+
+message AvAManagerInfoReply {
+    string gpu_uuid = 1;
+    string mngr_addr = 2;
+    uint32 worker_port = 3;
+}

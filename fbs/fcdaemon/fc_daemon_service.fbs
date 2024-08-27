@@ -1,0 +1,39 @@
+include "common/empty.fbs";
+namespace fcdaemon;
+
+table CreateRequest {
+    kernelImagePath:string (id: 0);
+    kernelArgs:string (id: 1);
+    initrdPath:string (id: 2);
+    imageName:string (id: 3);
+    imageStoragePrefix:string (id: 4);
+    inetDev:string (id: 5);
+    nameServer:string (id: 6);
+    awsAccessKeyID:string (id: 7);
+    awsSecretAccessKey:string (id: 8);
+    cpu:int64 (id: 9);
+    mem:int64 (id: 10);
+    numReplica:uint32 (id: 11);
+    vmType:string (id: 12);
+}
+
+table CreateReply {
+    ip:string (id : 0);
+    vmid:string (id : 1);
+}
+
+table CpuHogs {
+    n:int32 (id : 0);
+}
+
+table ReleaseRequest {
+    vmid:string (id : 0);
+}
+
+rpc_service FcService {
+    // Asks the fcdaemon to create ONE replica
+    CreateReplica(CreateRequest):CreateReply;
+    ReleaseVMSetup(ReleaseRequest):Empty;
+    CreateCPUHogs(CpuHogs):Empty;
+    StopCPUHogs(CpuHogs):Empty;
+}

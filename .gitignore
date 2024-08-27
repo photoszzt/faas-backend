@@ -1,0 +1,15 @@
+.idea
+.vscode
+examples/
+dist
+/fcdaemon
+/fcclient
+/faas-memory
+/resmngr
+/cpuhog
+dive.log
+deployment/k8s/yaml/gateway-dep.yml
+go.sum
+go.mod
+galvanic.yaml
+*.txt*

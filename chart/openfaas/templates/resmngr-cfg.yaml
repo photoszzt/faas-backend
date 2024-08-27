@@ -1,0 +1,24 @@
+{{- $functionNs := default .Release.Namespace .Values.functionNamespace }}
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  labels:
+    app: {{ template "openfaas.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: resmngr-config
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: resmngr-config
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  resmngr.yml: |
+    maxcount:
+      max: 10000
+      reuse: true
+      deploy_min: true
+      no_vm_scaleup: true
+    watermark:
+      low: 0
+      high: 9
+      reuse: true

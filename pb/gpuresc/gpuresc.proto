@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.gpuresc";
+option java_outer_classname = "GPURescProto";
+option go_package = "./;gpuresc";
+import "google/protobuf/empty.proto";
+
+package gpuresc;
+
+service GPUResc {
+    rpc GetGPUResource(google.protobuf.Empty) returns (ResourceReply) {}
+}
+
+message ResourceReply {
+    map<string, uint32> memory = 1; // memory in MB
+}

@@ -1,0 +1,74 @@
+{{- $functionNs := default .Release.Namespace .Values.functionNamespace }}
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: {{ template "openfaas.name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
+    component: fcdaemon
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+  name: fcdaemon
+  namespace: {{ .Release.Namespace | quote }}
+spec:
+  selector:
+    matchLabels:
+      app: fcdaemon
+  template:
+    metadata:
+      labels:
+        app: fcdaemon
+    spec:
+      containers:
+      - name: fcdaemon
+        resources:
+          {{- .Values.fcdaemon.resources | toYaml | nindent 12 }}
+        image: {{ .Values.fcdaemon.image }}
+        imagePullPolicy: {{ .Values.fcdaemon.imagePullPolicy }}
+        env:
+        - name: RESMNGRADDR
+          value: "gateway.{{ .Release.Namespace }}.svc.{{ .Values.kubernetesDNSDomain }}"
+        - name: LOG_LEVEL
+          value: "{{ .Values.fcdaemon.logLevel }}"
+        volumeMounts:
+        - mountPath: /usr/local/bin/firecracker
+          name: firecracker
+        - mountPath: /var/run/netns
+          name: netns
+        - mountPath: /etc/cni/conf.d
+          name: confd
+        - mountPath: /opt/cni/bin
+          name: cnibin
+        securityContext:
+          capabilities:
+            add: ["SYS_ADMIN"]
+      volumes:
+      - name: firecracker
+        hostPath:
+          path: /usr/local/bin/firecracker
+          type: File
+      - name: netns
+        hostPath:
+          path: /var/run/netns
+          type: Directory
+      - name: confd
+        hostPath:
+          path: /etc/cni/conf.d
+          type: Directory
+      - name: cnibin
+        hostPath:
+          path: /opt/cni/bin
+          type: Directory
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

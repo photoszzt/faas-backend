@@ -1,0 +1,35 @@
+include "common/empty.fbs";
+namespace resmngr;
+
+enum Status : int {
+  READY = 0,
+  FINISHED = 1,
+}
+
+enum Action : int {
+  DESTROY = 0,
+  KEEP_ALIVE = 1,
+  OK = 2,
+}
+
+table StatusUpdateRequest {
+  vmid:string (id: 0);
+  status: Status (id: 1);
+}
+
+table StatusUpdateReply {
+  action: Action (id: 0);
+}
+
+table RegisterNodeRequest {
+  ip:string (id: 0);
+  port:uint (id: 1);
+  node_id:string (id: 2);
+}
+
+rpc_service ResMngrService {
+  // A VM updating its status
+  UpdateStatus(StatusUpdateRequest):StatusUpdateReply;
+  // FCDaemon register itself to resource manager
+  RegisterNode(RegisterNodeRequest):Empty;
+}

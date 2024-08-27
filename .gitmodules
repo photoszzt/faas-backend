@@ -1,0 +1,3 @@
+[submodule "third_party/firecracker-go-sdk"]
+	path = third_party/firecracker-go-sdk
+	url = plant.csres.utexas.edu:/filer/osa/git-hype/serverless/firecracker-go-sdk
